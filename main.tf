@@ -5,5 +5,6 @@ resource "aws_instance" "demo_server" {
 
   tags = {
     Name = "demo-server"
+    Team = "Dev-Team"
   }
 }
