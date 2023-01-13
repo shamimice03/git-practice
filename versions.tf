@@ -7,10 +7,9 @@ terraform {
       version = "4.49.0"
     }
   }
-  
+}
+
   provider "aws" {
   region = "ap-northeast-1"
   }
 
-
-}
