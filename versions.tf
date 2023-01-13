@@ -1,16 +1,16 @@
 terraform {
   required_version = ">= 0.13.0"
 
-  required_providers {
+ required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
       version = "4.49.0"
     }
-
-    random = {
-      source  = "hashicorp/random"
-      version = "3.4.3"
-    }
   }
+  
+  provider "aws" {
+  region = "ap-northeast-1"
+  }
+
 
 }
