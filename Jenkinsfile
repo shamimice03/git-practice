@@ -1,33 +1,37 @@
 pipeline {
-    agent none
-    stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'python:2-alpine'
-                }
-            }
-            steps {
-                sh 'python -m py_compile pythoncode/add2vals.py pythoncode/calc.py'
-                stash(name: 'compiled-results', includes: 'pythoncode/*.py*')
-                sh 'ls -l pythoncode'
-            }
-        }
-        stage('Test') { 
-            agent {
-                docker {
-                    image 'qnib/pytest' 
-                }
-            }
-            steps {
-                sh 'py.test --junit-xml test-reports/results.xml pythoncode/test_calc.py' 
-                sh 'cat test-reports/results.xml'
-            }
-            post {
-                always {
-                    junit 'test-reports/results.xml' 
-                }
-            }
-        }
+    agent any
+    environment{
+        DOCKERHUB_CREDS = credentials('dockerhub')
     }
-}
+    stages {
+        stage('Clone Repo') {
+            steps {
+                checkout scm
+                sh 'ls *'
+            }
+        }
+        stage('Build Image') {
+            steps {
+                //sh 'docker build -t raj80dockerid/jenkinstest ./pushdockerimage/' (this will use the tag latest)
+		sh 'docker build -t shamimice03/jenkinstest:$BUILD_NUMBER ./pushdockerimage/'
+            }
+        }
+        stage('Docker Login') {
+            steps {
+                //sh 'docker login -u $DOCKERHUB_CREDS_USR -p $DOCKERHUB_CREDS_PSW' (this will leave the password visible)
+                sh 'echo $DOCKERHUB_CREDS_PSW | docker login -u $DOCKERHUB_CREDS_USR --password-stdin'                
+                }
+            }
+        stage('Docker Push') {
+            steps {
+		//sh 'docker push raj80dockerid/jenkinstest' (this will use the tag latest)    
+                sh 'docker push shamimice03/jenkinstest:$BUILD_NUMBER'
+                }
+            }
+        }
+    post {
+		always {
+			sh 'docker logout'
+		}
+	 }
+    }
