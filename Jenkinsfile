@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Clone Repo') {
+        stage('Say Hello') {
             steps {
                 sh 'echo hello'
             }
