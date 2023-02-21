@@ -1,9 +1,9 @@
 pipeline {
     agent any
     stages {
-        stage('Say Hello') {
+        stage('Run Script') {
             steps {
-                sh 'echo hello'
+                sh 'bash test.sh'
             }
         }
         }
