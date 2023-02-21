@@ -2,4 +2,4 @@
 
 echo "Hello From Script"
 echo "Testing Webhook"
-echo "Hello man"
+echo "Check SSL"
